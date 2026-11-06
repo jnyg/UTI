@@ -506,3 +506,25 @@ main{padding-top:76px}
   .content-landscape::before { display: none; }
   .content-landscape::after { display: none; }
 }
+
+/* U: prevent accidental horizontal panning on mobile Safari.
+   The hero artwork and the fixed landscape layer remain unchanged. */
+@media (max-width: 700px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* fallback for older WebKit */
+    overflow-x: clip;
+  }
+  main, .hero, .content-landscape {
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-copy, .hero-image {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .site-header { width: 100%; max-width: 100%; }
+  .site-header nav { flex: 1 1 auto; min-width: 0; }
+}
