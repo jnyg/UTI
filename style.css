@@ -481,3 +481,65 @@ main{padding-top:76px}
 /* Registration link */
 .registration .section-content a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .16em; }
 .registration .section-content a:hover { color: var(--red); }
+
+/* Mobile landscape fix (T): avoid background-attachment: fixed on a
+   full-height pseudo-element. Mobile WebKit may render that image only
+   for a small portion of a very tall page. Instead keep one viewport-
+   fixed artwork layer behind all content sections. */
+@media (max-width: 700px) {
+  body { isolation: isolate; }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: url("extracted-000.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center 76%;
+    opacity: .38;
+  }
+  main { position: relative; z-index: 1; }
+  .hero { background: var(--bg); }
+  .content-landscape { background: transparent; }
+  .content-landscape::before { display: none; }
+  .content-landscape::after { display: none; }
+}
+
+/* U: prevent accidental horizontal panning on mobile Safari.
+   The hero artwork and the fixed landscape layer remain unchanged. */
+@media (max-width: 700px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* fallback for older WebKit */
+    overflow-x: clip;
+  }
+  main, .hero, .content-landscape {
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-copy, .hero-image {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .site-header { width: 100%; max-width: 100%; }
+  .site-header nav { flex: 1 1 auto; min-width: 0; }
+}
+
+/* V: preserve an intentional gap between UTI and navigation on small screens.
+   Navigation may scroll within its own area without crowding the brand. */
+@media (max-width: 700px) {
+  .site-header { gap: 0; }
+  .site-header nav {
+    margin-left: clamp(24px, 7vw, 40px);
+    padding-left: 0;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .site-header nav a { flex: 0 0 auto; }
+}
